@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Go,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="返回字符串 在字符串 中的第一个位置， 表示字符串 不包含 返回字符串 在字符串 中的最后一个位置, 表示字符串 不包含 如果需要查询非 ASCII 编码的字符在父字符串中的位置，建议使用以下函数来对字符进行定位： 用于将字符串 中的前 个字符串 替换为字符串 ，并返回一个新的字符串，如果 则替换…">
+<meta name="keywords" content="Go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="strconv">
+<meta property="og:url" content="http://yoursite.com/2019/10/14/go语言字符串处理包——strings 和 strconv/index.html">
+<meta property="og:site_name" content="稻草人的博客">
+<meta property="og:description" content="返回字符串 在字符串 中的第一个位置， 表示字符串 不包含 返回字符串 在字符串 中的最后一个位置, 表示字符串 不包含 如果需要查询非 ASCII 编码的字符在父字符串中的位置，建议使用以下函数来对字符进行定位： 用于将字符串 中的前 个字符串 替换为字符串 ，并返回一个新的字符串，如果 则替换…">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-10-14T15:45:26.729Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="strconv">
+<meta name="twitter:description" content="返回字符串 在字符串 中的第一个位置， 表示字符串 不包含 返回字符串 在字符串 中的最后一个位置, 表示字符串 不包含 如果需要查询非 ASCII 编码的字符在父字符串中的位置，建议使用以下函数来对字符进行定位： 用于将字符串 中的前 个字符串 替换为字符串 ，并返回一个新的字符串，如果 则替换…">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/14/go语言字符串处理包——strings 和 strconv/">
+
+
+
+
+
+  <title>strconv | 稻草人的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">稻草人的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/go语言字符串处理包——strings 和 strconv/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="稻草人">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="稻草人的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">strconv</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-14T23:41:38+08:00">
+                2019-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go/" itemprop="url" rel="index">
+                    <span itemprop="name">Go</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>返回字符串 在字符串 中的第一个位置， 表示字符串 不包含 返回字符串 在字符串 中的最后一个位置, 表示字符串 不包含 如果需要查询非 ASCII 编码的字符在父字符串中的位置，建议使用以下函数来对字符进行定位： 用于将字符串 中的前 个字符串 替换为字符串 ，并返回一个新的字符串，如果 则替换…<a id="more"></a></p>
+<h1 id="前缀和后缀"><a href="#前缀和后缀" class="headerlink" title="前缀和后缀"></a>前缀和后缀</h1><p><code>HasPrefix</code> 判断字符串 <code>s</code> 是否以 <code>prefix</code> 开头</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings.HasPrefix(s, prefix <span class="keyword">string</span>) <span class="keyword">bool</span></span><br></pre></td></tr></table></figure>
+
+<p><code>HasPrefix</code> 判断字符串 <code>s</code> 是否以 <code>prefix</code> 开头</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings.HasSuffix(s, suffix <span class="keyword">string</span>) <span class="keyword">bool</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> str <span class="keyword">string</span> = <span class="string">"hello world"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 前缀</span></span><br><span class="line">fmt.Printf(<span class="string">"前缀包含 'hello' = %t\n"</span>, strings.HasPrefix(str,<span class="string">"hello"</span>))</span><br><span class="line">fmt.Printf(<span class="string">"前缀包含 'world' = %t\n"</span>, strings.HasPrefix(str,<span class="string">"world"</span>))</span><br><span class="line"><span class="comment">// 后缀</span></span><br><span class="line">fmt.Printf(<span class="string">"后缀包含 'ld' = %t\n"</span>, strings.HasSuffix(str,<span class="string">"ld"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">前缀包含 &apos;hello&apos; = true</span><br><span class="line">前缀包含 &apos;world&apos; = false</span><br><span class="line">后缀包含 &apos;ld&apos; = true</span><br></pre></td></tr></table></figure>
+
+<h1 id="字符串包含关系"><a href="#字符串包含关系" class="headerlink" title="字符串包含关系"></a>字符串包含关系</h1><p><code>Contains</code> 判断字符串 <code>s</code> 是否包含 <code>substr</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Contains(s, substr <span class="keyword">string</span>) <span class="keyword">bool</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> str <span class="keyword">string</span> = <span class="string">"hello world"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断包含关系</span></span><br><span class="line">fmt.Printf(<span class="string">"字符串是否包含 'llo' = %t\n"</span>, strings.Contains(str,<span class="string">"llo"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">字符串是否包含 &apos;llo&apos; = true</span><br></pre></td></tr></table></figure>
+
+<h1 id="判断子字符在父字符串中的位置"><a href="#判断子字符在父字符串中的位置" class="headerlink" title="判断子字符在父字符串中的位置"></a>判断子字符在父字符串中的位置</h1><p><code>Index</code> 返回字符串 <code>substr</code> 在字符串 <code>s</code> 中的第一个位置，<code>-1</code> 表示字符串 <code>s</code> 不包含 <code>substr</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Index(s, substr <span class="keyword">string</span>) <span class="keyword">int</span></span><br></pre></td></tr></table></figure>
+
+<p><code>LastIndex</code> 返回字符串 <code>substr</code> 在字符串 <code>s</code> 中的最后一个位置, <code>-1</code> 表示字符串 <code>s</code> 不包含 <code>substr</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LastIndex(s, substr <span class="keyword">string</span>) <span class="keyword">int</span></span><br></pre></td></tr></table></figure>
+
+<p>如果需要查询非 ASCII 编码的字符在父字符串中的位置，建议使用以下函数来对字符进行定位：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IndexRune(s <span class="keyword">string</span>, r <span class="keyword">rune</span>) <span class="keyword">int</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> str <span class="keyword">string</span> = <span class="string">"hello world"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断字符串所在的位置(第一个位置)</span></span><br><span class="line">fmt.Printf(<span class="string">"子字符串 'hello' 所在第一个位置 index = %d\n"</span>, strings.Index(str,<span class="string">"hello"</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断字符串所在的位置(最后一个位置)</span></span><br><span class="line">fmt.Printf(<span class="string">"子字符串 'l' 所在最后一个位置 index = %d\n"</span>, strings.LastIndex(str,<span class="string">"l"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">子字符串 &apos;hello&apos; 所在第一个位置 index = 0</span><br><span class="line">子字符串 &apos;l&apos; 所在最后一个位置 index = 9</span><br></pre></td></tr></table></figure>
+
+<h1 id="字符串替换"><a href="#字符串替换" class="headerlink" title="字符串替换"></a>字符串替换</h1><p><code>Replace</code> 用于将字符串 <code>s</code> 中的前 <code>n</code> 个字符串 <code>old</code> 替换为字符串 <code>new</code>，并返回一个新的字符串，如果 <code>n = -1</code> 则替换所有字符串 <code>old</code> 为字符串 <code>new</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Replace(s, old, <span class="built_in">new</span> <span class="keyword">string</span>, n <span class="keyword">int</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> str <span class="keyword">string</span> = <span class="string">"hello world, hello, hello"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 字符串替换</span></span><br><span class="line">fmt.Printf(<span class="string">" '你好' 替换第1个 'hello' = %s\n"</span>,strings.Replace(str,<span class="string">"hello"</span>,<span class="string">"你好"</span>, <span class="number">1</span>))</span><br><span class="line">fmt.Printf(<span class="string">" '你好' 替换第2个以前的 'hello' = %s\n"</span>,strings.Replace(str,<span class="string">"hello"</span>,<span class="string">"你好"</span>, <span class="number">2</span>))</span><br><span class="line">fmt.Printf(<span class="string">" '你好' 替换所有的 'hello' = %s\n"</span>,strings.Replace(str,<span class="string">"hello"</span>,<span class="string">"你好"</span>, <span class="number">-1</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="字符串出现的次数"><a href="#字符串出现的次数" class="headerlink" title="字符串出现的次数"></a>字符串出现的次数</h1><p><code>Count</code> 用于统计字符串 <code>substr</code> 出现在字符串 <code>s</code> 中的没有重叠的次数</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Count(s, substr <span class="keyword">string</span>) <span class="keyword">int</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> str <span class="keyword">string</span> = <span class="string">"hello world, hello, hello"</span></span><br><span class="line"><span class="keyword">var</span> manyH <span class="keyword">string</span> = <span class="string">"HHHHHHHH"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 字符串出现次数</span></span><br><span class="line">fmt.Printf(<span class="string">" 'hello' 出现的非重叠次数 = %d\n"</span>, strings.Count(str,<span class="string">"hello"</span>))</span><br><span class="line">fmt.Printf(<span class="string">" 'HH' 出现的非重叠次数 = %d\n"</span>, strings.Count(manyH,<span class="string">"HH"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&apos;hello&apos; 出现的非重叠次数 = 3</span><br><span class="line">&apos;HH&apos; 出现的非重叠次数 = 4</span><br></pre></td></tr></table></figure>
+
+<h1 id="重复字符串"><a href="#重复字符串" class="headerlink" title="重复字符串"></a>重复字符串</h1><p><code>Repeat</code> 用于重复 <code>count</code> 次字符串 <code>s</code> 并返回新的字符串</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Repeat(s <span class="keyword">string</span>, count <span class="keyword">int</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">&quot;fmt&quot;</span><br><span class="line">&quot;strings&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">// 重复字符串</span><br><span class="line">var originalStr = &quot;hello&quot;</span><br><span class="line">fmt.Printf(&quot;重复字符串 &apos;hello&apos; 3 次 = %s\n&quot;, strings.Repeat(originalStr,3))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">重复字符串 &apos;hello&apos; 3 次 = hellohellohello</span><br></pre></td></tr></table></figure>
+
+<h1 id="修改字符串大小写"><a href="#修改字符串大小写" class="headerlink" title="修改字符串大小写"></a>修改字符串大小写</h1><p><code>ToLower</code> 将字符串 <code>s</code> 全部转为小写</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ToLower(s <span class="keyword">string</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p><code>ToUpper</code> 将字符串 <code>s</code> 全部转为大写</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ToUpper(s <span class="keyword">string</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> str <span class="keyword">string</span> = <span class="string">"HELLO world"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 字符串全部转为小写</span></span><br><span class="line">fmt.Printf(<span class="string">" 'HELLO world' 转为小写 = %s\n"</span>, strings.ToLower(str))</span><br><span class="line"><span class="comment">// 字符串全部转为大写</span></span><br><span class="line">fmt.Printf(<span class="string">" 'HELLO world' 转为大写 = %s\n"</span>, strings.ToUpper(str))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&apos;HELLO world&apos; 转为小写 = hello world</span><br><span class="line">&apos;HELLO world&apos; 转为大写 = HELLO WORLD</span><br></pre></td></tr></table></figure>
+
+<h1 id="修剪字符串"><a href="#修剪字符串" class="headerlink" title="修剪字符串"></a>修剪字符串</h1><p><code>TrimLeft</code> 用于剔除字符串 <code>s</code> 开头的字符串 <code>cutset</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TrimLeft(s <span class="keyword">string</span>, cutset <span class="keyword">string</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p><code>TrimRight</code> 用于剔除字符串 <code>s</code> 末尾的字符串 <code>cutset</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TrimRight(s <span class="keyword">string</span>, cutset <span class="keyword">string</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p><code>TrimSpace</code> 用于剔除字符串 <code>s</code> 开头和末尾的空格字符串</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TrimSpace(s <span class="keyword">string</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Trim</code> 用于剔除掉字符串 <code>s</code> 开头和末尾的字符串 <code>cutset</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Trim(s <span class="keyword">string</span>, cutset <span class="keyword">string</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> str <span class="keyword">string</span> = <span class="string">"hello world"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 剔除掉开头的字符串</span></span><br><span class="line">fmt.Printf(<span class="string">"裁剪掉开头的字符串 'he' = %s\n"</span>, strings.TrimLeft(str,<span class="string">"he"</span>))</span><br><span class="line"><span class="comment">// 剔除掉末尾的字符串</span></span><br><span class="line">fmt.Printf(<span class="string">"裁剪掉末尾的字符串 'ld' = %s\n"</span>, strings.TrimRight(str,<span class="string">"ld"</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 剔除掉开头和末尾的空格字符串</span></span><br><span class="line"><span class="keyword">var</span> cutString <span class="keyword">string</span> = <span class="string">" he  llo "</span></span><br><span class="line">fmt.Printf(<span class="string">"裁剪掉开头和末尾的空白字符串 = %s\n"</span>, strings.TrimSpace(cutString))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 剔除掉开头和末尾指定的字符串</span></span><br><span class="line"><span class="keyword">var</span> cutString1 <span class="keyword">string</span> = <span class="string">"shellos"</span></span><br><span class="line">fmt.Printf(<span class="string">"裁剪掉所有的空格字符串 = %s\n"</span>, strings.Trim(cutString1,<span class="string">"s"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">裁剪掉开头的字符串 &apos;he&apos; =  hello world</span><br><span class="line">裁剪掉末尾的字符串 &apos;ld&apos; =  hello wor</span><br><span class="line">裁剪掉开头和末尾的空白字符串 = he  llo</span><br><span class="line">裁剪掉所有的空格字符串 = hello</span><br></pre></td></tr></table></figure>
+
+<h1 id="字符串类型的-slice-与字符串之间的转换"><a href="#字符串类型的-slice-与字符串之间的转换" class="headerlink" title="字符串类型的 slice 与字符串之间的转换"></a>字符串类型的 <code>slice</code> 与字符串之间的转换</h1><p><code>Fields</code> 将会利用空白符号来作为分隔符将字符串分割成若干小块，并返回一个 <code>slice</code>，如果字符串只包含空白符号，则返回一个长度为 <code>0</code> 的 <code>slice</code>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Fields(s <span class="keyword">string</span>) []<span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Split</code> 用于自定义分割符号 <code>sep</code> 来对指定字符串进行分割，同样返回 <code>slice</code>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Split(s, sep <span class="keyword">string</span>) []<span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">str := <span class="string">"The quick brown fox jumps over the lazy dog"</span></span><br><span class="line">sl := strings.Fields(str)</span><br><span class="line">fmt.Printf(<span class="string">"根据空格分割成 slice：\n"</span>)</span><br><span class="line">fmt.Println(sl)</span><br><span class="line"></span><br><span class="line">fmt.Println()</span><br><span class="line"></span><br><span class="line">str2 := <span class="string">"The-quick-brown-fox-jumps-over-the-lazy-dog"</span></span><br><span class="line">sl2 := strings.Split(str2,<span class="string">"-"</span>)</span><br><span class="line"></span><br><span class="line">fmt.Printf(<span class="string">"根据 '-' 分割成 slice：\n"</span>)</span><br><span class="line">fmt.Println(sl2)</span><br><span class="line"></span><br><span class="line">fmt.Println()</span><br><span class="line"></span><br><span class="line">str3 := strings.Join(sl2,<span class="string">"+"</span>)</span><br><span class="line">fmt.Printf(<span class="string">"slice sl2 转为字符串以 '+' 连接：\n"</span>, )</span><br><span class="line">fmt.Println(str3)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">根据空格分割成 slice：</span><br><span class="line">[The quick brown fox jumps over the lazy dog]</span><br><span class="line"></span><br><span class="line">根据 &apos;-&apos; 分割成 slice：</span><br><span class="line">[The quick brown fox jumps over the lazy dog]</span><br><span class="line"></span><br><span class="line">slice sl2 转为字符串以 &apos;+&apos; 连接：</span><br><span class="line">The+quick+brown+fox+jumps+over+the+lazy+dog</span><br></pre></td></tr></table></figure>
+
+<h1 id="字符串与数字类型间的转换"><a href="#字符串与数字类型间的转换" class="headerlink" title="字符串与数字类型间的转换"></a>字符串与数字类型间的转换</h1><h2 id="字符串转数字"><a href="#字符串转数字" class="headerlink" title="字符串转数字"></a>字符串转数字</h2><p><code>ParseInt</code> 把字符串 <code>s</code> 转化为 <code>int64</code>类型</p>
+<ul>
+<li><code>base</code> 表示进位制（2 到 36），如果 <code>base</code> 为 0，则根据字符串前缀判断，前缀 0x 表示 16 进制，前缀 0 表示 8 进制，否则是 10 进制</li>
+<li><code>bitSize</code> 表示结果的位宽（包括符号位），0 表示最大位宽<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ParseInt(s <span class="keyword">string</span>, base <span class="keyword">int</span>, bitSize <span class="keyword">int</span>) (i <span class="keyword">int64</span>, err error)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strconv"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">num,error := strconv.ParseInt(<span class="string">"11"</span>,<span class="number">2</span>,<span class="number">0</span>)</span><br><span class="line">fmt.Printf(<span class="string">"num = %d\n"</span>, num)</span><br><span class="line">fmt.Printf(<span class="string">"error = %v\n\n"</span>, error)</span><br><span class="line"></span><br><span class="line">num1,error1 := strconv.ParseInt(<span class="string">"11"</span>,<span class="number">8</span>,<span class="number">0</span>)</span><br><span class="line">fmt.Printf(<span class="string">"num1 = %d\n"</span>, num1)</span><br><span class="line">fmt.Printf(<span class="string">"error1 = %v\n\n"</span>, error1)</span><br><span class="line"></span><br><span class="line">num2,error2 := strconv.ParseInt(<span class="string">"11"</span>,<span class="number">10</span>,<span class="number">0</span>)</span><br><span class="line">fmt.Printf(<span class="string">"num2 = %d\n"</span>, num2)</span><br><span class="line">fmt.Printf(<span class="string">"error2 = %v\n\n"</span>, error2)</span><br><span class="line"></span><br><span class="line">num3,error3 := strconv.ParseInt(<span class="string">"11"</span>,<span class="number">16</span>,<span class="number">0</span>)</span><br><span class="line">fmt.Printf(<span class="string">"num3 = %d\n"</span>, num3)</span><br><span class="line">fmt.Printf(<span class="string">"error3 = %v\n\n"</span>, error3)</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">` </span></span><br><span class="line"><span class="string">输出：</span></span><br></pre></td></tr></table></figure>
+
+<p>num = 3<br>error = <nil></nil></p>
+<p>num1 = 9<br>error1 = <nil></nil></p>
+<p>num2 = 11<br>error2 = <nil></nil></p>
+<p>num3 = 17<br>error3 = <nil></nil></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">`ParseUint` 和 `ParseInt` 一样，但是输出为正整数</span><br><span class="line">``` Go</span><br><span class="line">ParseUint(s string, base int, bitSize int) (uint64, error)</span><br></pre></td></tr></table></figure>
+
+<p><code>Atoi</code> 把字符串 <code>s</code> 转换为<code>int</code>类型，并返回 <code>error</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Atoi(s <span class="keyword">string</span>) (<span class="keyword">int</span>, error)</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strconv"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">num,error := strconv.Atoi(<span class="string">"1"</span>)</span><br><span class="line"></span><br><span class="line">fmt.Printf(<span class="string">"num = %d\n"</span>,num)</span><br><span class="line">fmt.Println(<span class="string">"error = "</span>,error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">num = 1</span><br><span class="line">error =  &lt;nil&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>ParseBool</code> 把字符串 <code>s</code> 转换为 <code>bool</code>，并返回 <code>error</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ParseBool(str <span class="keyword">string</span>) (<span class="keyword">bool</span>, error)</span><br></pre></td></tr></table></figure>
+
+<p><code>ParseFloat</code> 把字符串 <code>s</code> 转换为 <code>float64</code>，并返回 <code>error</code></p>
+<ul>
+<li><code>bitSize</code> 表示结果的位宽（包括符号位），0 表示最大位宽<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ParseFloat(s <span class="keyword">string</span>, bitSize <span class="keyword">int</span>) (<span class="keyword">float64</span>, error)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><code>FormatInt</code> 把 <code>i</code> 转换为 <code>string</code></p>
+<ul>
+<li><code>base</code> 表示进位制（2 到 36）<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FormatInt(i <span class="keyword">int64</span>, base <span class="keyword">int</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><code>FormatUint</code> 和 <code>FormatInt</code> 一样，但是要为正整数</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">FormatUint</span><span class="params">(i <span class="keyword">uint64</span>, base <span class="keyword">int</span>)</span> <span class="title">string</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="数字转字符串"><a href="#数字转字符串" class="headerlink" title="数字转字符串"></a>数字转字符串</h2><p><code>FormatUint</code> 把 <code>uint64</code> 转为字符串</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FormatUint(i <span class="keyword">uint64</span>, base <span class="keyword">int</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p><code>FormatInt</code> 把 <code>int64</code> 转为字符串</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FormatInt(i <span class="keyword">int64</span>, base <span class="keyword">int</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p><code>FormatBool</code> 把 <code>bool</code> 转为字符串</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FormatBool(b <span class="keyword">bool</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p><code>FormatFloat</code> 把 <code>float64</code> 转为字符串</p>
+<p>1、<code>f</code>：要转换的浮点数</p>
+<p>2、<code>fmt</code>：格式标记（<code>b</code>、<code>e</code>、<code>E</code>、<code>f</code>、<code>g</code>、<code>G</code>）</p>
+<ul>
+<li><code>b</code> (<code>-ddddp±ddd</code>，二进制指数)</li>
+<li><code>e</code> (<code>-d.dddde±dd</code>，十进制指数)</li>
+<li><code>E</code> (<code>-d.ddddE±dd</code>，十进制指数)</li>
+<li><code>f</code> (<code>-ddd.dddd</code>，没有指数)</li>
+<li><code>g</code> (<code>e</code>:大指数，<code>f</code>:其它情况)</li>
+<li><code>G</code> (<code>E</code>:大指数，<code>f</code>:其它情况)</li>
+<li>如果格式标记为 <code>e</code>，<code>E</code> 和 <code>f</code>，则 <code>prec</code> 表示小数点后的数字位数</li>
+<li>如果格式标记为 <code>g</code>，<code>G</code>，则 <code>prec</code> 表示总的数字位数（整数部分+小数部分）</li>
+</ul>
+<p>3、<code>prec</code>：精度（数字部分的长度，不包括指数部分）</p>
+<p>4、<code>bitSize</code>：指定浮点类型（<code>32:float32</code>、<code>64:float64</code>）</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FormatFloat(f <span class="keyword">float64</span>, fmt <span class="keyword">byte</span>, prec, bitSize <span class="keyword">int</span>) <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"strconv"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">f := <span class="number">200.12345678901234567890123456789</span></span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'b'</span>, <span class="number">5</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'e'</span>, <span class="number">5</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'E'</span>, <span class="number">5</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'f'</span>, <span class="number">5</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'g'</span>, <span class="number">5</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'G'</span>, <span class="number">5</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'b'</span>, <span class="number">30</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'e'</span>, <span class="number">30</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'E'</span>, <span class="number">30</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'f'</span>, <span class="number">30</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'g'</span>, <span class="number">30</span>, <span class="number">32</span>))</span><br><span class="line">fmt.Println(strconv.FormatFloat(f, <span class="string">'G'</span>, <span class="number">30</span>, <span class="number">32</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">13115291p-16</span><br><span class="line">2.00123e+02</span><br><span class="line">2.00123E+02</span><br><span class="line">200.12346</span><br><span class="line">200.12</span><br><span class="line">200.12</span><br><span class="line">13115291p-16</span><br><span class="line">2.001234588623046875000000000000e+02</span><br><span class="line">2.001234588623046875000000000000E+02</span><br><span class="line">200.123458862304687500000000000000</span><br><span class="line">200.1234588623046875</span><br><span class="line">200.1234588623046875</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Go/" rel="tag"># Go</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/14/Swift中的逃逸闭包与非逃逸闭包/" rel="next" title="Swift中的逃逸闭包(@escaping )与非逃逸闭包(@noescaping)">
+                <i class="fa fa-chevron-left"></i> Swift中的逃逸闭包(@escaping )与非逃逸闭包(@noescaping)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">稻草人</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/YouthKnowsNoPain" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前缀和后缀"><span class="nav-number">1.</span> <span class="nav-text">前缀和后缀</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串包含关系"><span class="nav-number">2.</span> <span class="nav-text">字符串包含关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#判断子字符在父字符串中的位置"><span class="nav-number">3.</span> <span class="nav-text">判断子字符在父字符串中的位置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串替换"><span class="nav-number">4.</span> <span class="nav-text">字符串替换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串出现的次数"><span class="nav-number">5.</span> <span class="nav-text">字符串出现的次数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重复字符串"><span class="nav-number">6.</span> <span class="nav-text">重复字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改字符串大小写"><span class="nav-number">7.</span> <span class="nav-text">修改字符串大小写</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修剪字符串"><span class="nav-number">8.</span> <span class="nav-text">修剪字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串类型的-slice-与字符串之间的转换"><span class="nav-number">9.</span> <span class="nav-text">字符串类型的 slice 与字符串之间的转换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串与数字类型间的转换"><span class="nav-number">10.</span> <span class="nav-text">字符串与数字类型间的转换</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串转数字"><span class="nav-number">10.1.</span> <span class="nav-text">字符串转数字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数字转字符串"><span class="nav-number">10.2.</span> <span class="nav-text">数字转字符串</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">稻草人</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
